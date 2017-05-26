@@ -24,105 +24,102 @@ public class SortedDecimalMap<E extends DecimalSortable>
 
     @Override
     public boolean contains(int key) {
-        // TODO -- write this code
+        //Integers required to break up the key in digits
         int index;
         int remainder = key;
         DecimalNode node = root;
         for (int i = 0; i < digitCount; i++) {
+            //get the first digit in the key
             index = remainder / (int) Math.pow(10, digitCount - i - 1);
+            //get the last digits in the key
             remainder -= (index * Math.pow(10, digitCount - i - 1));
+            //Move to the next child if it exists
             if (node.children[index] != null) {
                 node = node.children[index];
             } else {
-                return false;
-            }
-
-            if (i == digitCount - 1) {
-                if (node.value != null) {
-                    return true;
-                }
+                break;
             }
         }
-        return false;
+        //return true if the leaf has a value
+        return node.value != null;
     }
 
     @Override
     public E get(int key) {
-        // TODO -- write this code
+        //Integers required to break up the key in digits
         int index;
         int remainder = key;
         DecimalNode node = root;
         for (int i = 0; i < digitCount; i++) {
+            //get the first digit in the key
             index = remainder / (int) Math.pow(10, digitCount - i - 1);
+            //get the last digits in the key
             remainder -= (index * Math.pow(10, digitCount - i - 1));
+            //Move to the next child if it exists
             if (node.children[index] != null) {
                 node = node.children[index];
             } else {
-                return null;
-            }
-            if (i == digitCount - 1) {
-                if(node != null){
-                        return (E) node.value;
-                }
-                else{
-                        return null;
-                }
+                break;
             }
         }
-        return null;
+        //Return the value inside the leaf node
+        return (E) node.value;
     }
 
     @Override
     public boolean insert(E e) {
-        // TODO -- write this code
+        //Integers required to break up the key in digits
         int index;
         int remainder = e.getKey();
         DecimalNode node = root;
         for (int i = 0; i < digitCount; i++) {
+            //get the first digit in the key
             index = remainder / (int) Math.pow(10, digitCount - i - 1);
+            //get the last digits in the key
             remainder -= (index * Math.pow(10, digitCount - i - 1));
+            //Create the child if it doesn't exist
             if (node.children[index] == null) {
                 node.makeChild(index);
             }
-            if (i == digitCount - 1) {
-                if (node.children[index].value != null) {
-                    return false;
-                }
-                node.children[index].value = e;
-                return true;
-            } else {
-                node = node.children[index];
-            }
+            //Move to the next child
+            node = node.children[index];
         }
+        //Return false if there is already a value in the node
+        if (node.value != null) {
+            return false;
+        }
+        //Place the value in the node
+        node.value = e;
         return true;
     }
 
     @Override
     public boolean remove(int key) {
-        // TODO -- write this code
+        //Integers required to break up the key in digits
         int index;
         int remainder = key;
         DecimalNode node = root;
         for (int i = 0; i < digitCount; i++) {
+            //get the first digit in the key
             index = remainder / (int) Math.pow(10, digitCount - i - 1);
+            //get the last digits in the key
             remainder -= (index * Math.pow(10, digitCount - i - 1));
+            //No need to go further if the child doesn't exist - return false
             if (node.children[index] == null) {
                 return false;
             }
-            if (i == digitCount - 1) {
-                if (node.children[index].value != null) {
-                    node.children[index].value = null;
-                    return true;
-                }
-            }
-            else{
-                node = node.children[index];
-            }
+            //Move to the next child
+            node = node.children[index];
         }
-        return true;
+        //Remove the value at the leaf if it exists
+        if (node.value != null) {
+            node.value = null;
+            return true;
+        }
+        return false;
     }
 
-     /**
+    /**
      * Reports if the tree is empty or not.
      *
      * @return true if the tree is empty, false if not
@@ -197,8 +194,10 @@ public class SortedDecimalMap<E extends DecimalSortable>
             for (int i = 0; i < 10; i++) {
                 if (node.children[i] != null) {
                     if (node.children[i].value != null) {
-                       queue.add((E)node.children[i].value);
+                        //Base case: the child is a leaf - just add it to the queue
+                        queue.add((E) node.children[i].value);
                     } else {
+                        //When the node is a parent, recurse
                         fillQueue(node.children[i]);
                     }
                 }
