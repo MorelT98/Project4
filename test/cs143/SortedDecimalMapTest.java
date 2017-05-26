@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package cs143;
 
 import java.util.Iterator;
@@ -29,6 +24,7 @@ public class SortedDecimalMapTest {
     /**
      * Test of contains method, of class SortedDecimalMap.
      */
+    
     @Test
     public void testContains() {
         assertFalse(tree.contains(125));
@@ -89,6 +85,7 @@ public class SortedDecimalMapTest {
         assertFalse(tree.get(331).equals(tree.get(330)));
         assertFalse(tree.get(331).equals("331"));
         assertFalse(tree.get(331).equals(new Product(330)));
+        
     }
 
     /**
@@ -99,6 +96,7 @@ public class SortedDecimalMapTest {
         assertFalse(tree.remove(250));
         tree.insert(new Product(234));
         assertTrue(tree.remove(234));
+        assertFalse(tree.remove(234));
         assertTrue(tree.isEmpty());
         assertFalse(tree.remove(123));
         tree.insert(new Product(12));
@@ -114,6 +112,8 @@ public class SortedDecimalMapTest {
     public void testIsEmpty() {
         assertTrue(tree.isEmpty());
         tree.insert(new Product(321));
+        assertFalse(tree.isEmpty());
+        tree.insert(new Product(322));
         assertFalse(tree.isEmpty());
     }
 
